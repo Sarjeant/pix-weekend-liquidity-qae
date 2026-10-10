@@ -1,0 +1,21 @@
+# results.py - every RESULT line from the runs, pasted in as a Python list (one dict per run).
+RESULTS = [
+{"kind": "depth", "m": 0, "shots": 200, "ones": 14, "counts": {"0": 186, "1": 14}, "theory": 0.093023, "backend": "basic_simulator", "time": "2026-10-09 19:32"},
+{"kind": "depth", "m": 1, "shots": 200, "ones": 136, "counts": {"0": 64, "1": 136}, "theory": 0.642409, "backend": "basic_simulator", "time": "2026-10-09 19:33"},
+{"kind": "depth", "m": 2, "shots": 200, "ones": 200, "counts": {"1": 200}, "theory": 0.999554, "backend": "basic_simulator", "time": "2026-10-09 19:35"},
+{"kind": "depth", "m": 2, "shots": 200, "ones": 200, "counts": {"1": 200}, "theory": 0.999554, "backend": "ionq_forte_ent_sim", "time": "2026-10-09 19:51"},
+{"kind": "depth", "m": 12, "shots": 200, "ones": 193, "counts": {"0": 7, "1": 193}, "theory": 0.988891, "backend": "ionq_forte_ent_sim", "time": "2026-10-09 19:53"},
+{"kind": "depth", "m": 12, "shots": 200, "ones": 198, "counts": {"0": 2, "1": 198}, "theory": 0.988891, "backend": "ionq_forte_ent_sim", "time": "2026-10-09 19:55"},
+{"kind": "depth", "m": 12, "shots": 200, "ones": 196, "counts": {"0": 4, "1": 196}, "theory": 0.988891, "backend": "ionq_forte_ent_sim", "time": "2026-10-09 19:57"},
+{"kind": "depth", "m": 12, "shots": 2000, "ones": 1962, "counts": {"0": 38, "1": 1962}, "theory": 0.988891, "backend": "ionq_forte_ent_sim", "time": "2026-10-09 19:59"},
+{"kind": "cal", "prepared": 0, "shots": 2000, "ones": 0, "counts": {"0": 2000}, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:40"},
+{"kind": "cal", "prepared": 1, "shots": 2000, "ones": 2000, "counts": {"1": 2000}, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:42"},
+{"kind": "depth", "m": 0, "shots": 2000, "ones": 235, "counts": {"0": 1765, "1": 235}, "theory": 0.093023, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:44"},
+{"kind": "depth", "m": 1, "shots": 2000, "ones": 1230, "counts": {"0": 770, "1": 1230}, "theory": 0.642409, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:46"},
+{"kind": "depth", "m": 2, "shots": 2000, "ones": 1980, "counts": {"0": 20, "1": 1980}, "theory": 0.999554, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:47"},
+{"kind": "depth", "m": 3, "shots": 2000, "ones": 1341, "counts": {"0": 659, "1": 1341}, "theory": 0.682342, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:50"},
+{"kind": "depth", "m": 4, "shots": 2000, "ones": 247, "counts": {"0": 1753, "1": 247}, "theory": 0.118983, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:54"},
+{"kind": "depth", "m": 6, "shots": 2000, "ones": 1232, "counts": {"0": 768, "1": 1232}, "theory": 0.60146, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:56"},
+{"kind": "depth", "m": 8, "shots": 2000, "ones": 1427, "counts": {"0": 573, "1": 1427}, "theory": 0.720974, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:58"},
+{"kind": "depth", "m": 23, "shots": 2000, "ones": 1635, "counts": {"0": 365, "1": 1635}, "theory": 0.826372, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:48"},
+]
