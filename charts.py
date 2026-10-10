@@ -10,7 +10,7 @@ import circuits
 import data
 import estimate
 
-BLUE, ORANGE = "#2a78d6", "#eb6834"          # categorical slots 1 and 2
+BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"  # categorical slots 1 to 3
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 SURFACE = "#fcfcfb"
 RECORD_FRIDAY, RECORD_TUESDAY = "2026-09-04", "2026-09-08"  # record weekend, Monday 7 Sep a holiday
@@ -75,8 +75,8 @@ def chart2_drawdowns(buffer=0.10, path="chart2_drawdowns.png"):
     return path
 
 
-def chart3_amplification(rows, p_true, path="chart3_amplification.png"):
-    """Measured flag probability against depth: IonQ noise model vs ideal theory and the fit."""
+def chart3_amplification(rows, p_true, hw_rows=None, path="chart3_amplification.png"):
+    """Measured flag probability against depth: IonQ noise model and hardware vs theory and fit."""
     depth = [r for r in rows if r.get("kind") == "depth" and r["shots"] >= 2000]
     f = estimate.fit(rows)
     mm = np.arange(0, 24)
@@ -90,11 +90,21 @@ def chart3_amplification(rows, p_true, path="chart3_amplification.png"):
     err = np.sqrt(y * (1 - y) / np.array([r["shots"] for r in depth]))
     ax.errorbar(x, y, yerr=1.96 * err, fmt="o", color=ORANGE, markersize=8,
                 markeredgecolor=SURFACE, markeredgewidth=2, label="IonQ Forte Enterprise 1 noise model")
-    _style(ax, "Amplification survives the IonQ noise model to 23 steps (70 two-qubit gates)",
+    hw = [r for r in (hw_rows or []) if r.get("kind") == "depth"]
+    if hw:
+        hx = np.array([r["m"] for r in hw])
+        hy = np.array([r["ones"] / r["shots"] for r in hw])
+        herr = np.sqrt(np.clip(hy * (1 - hy), 1e-4, None) / np.array([r["shots"] for r in hw]))
+        ax.errorbar(hx, hy, yerr=1.96 * herr, fmt="s", color=AQUA, markersize=9, capsize=3,
+                    markeredgecolor=INK, markeredgewidth=1.2, label="IonQ Forte Enterprise 1 hardware")
+    title = "Amplification survives the IonQ noise model to 23 steps (70 two-qubit gates)"
+    if hw:
+        title = f"Amplification holds on IonQ hardware at {max(r['m'] for r in hw)} steps and on the noise model to 23"
+    _style(ax, title,
            "Grover steps m", "P(breach flag = 1)")
-    ax.set_ylim(-0.02, 1.25)
+    ax.set_ylim(-0.02, 1.32)
     ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
-    ax.legend(frameon=False, fontsize=9, labelcolor=INK2, loc="upper center", ncol=3)
+    ax.legend(frameon=False, fontsize=8.5, labelcolor=INK2, loc="upper center", ncol=2)
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)

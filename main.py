@@ -163,7 +163,7 @@ def main(shots: int = 200, flag: bool = True, value: float = 0.05):
                   ("IonQ noise model", on_ionq["model_calls"], on_ionq["se_qae"])]
         base = baseline.baseline_table(BUFFER)
         for path in (charts.chart1_balances(), charts.chart2_drawdowns(BUFFER),
-                     charts.chart3_amplification(ionq, p),
+                     charts.chart3_amplification(ionq, p, estimate.load_results("ionq_forte_ent_hw")),
                      charts.chart4_precision(points, p, base["data_se_bootstrap"])):
             print("saved", path)
         emit({"stage": "charts", "record_weekend_drawdown": round(charts.record_weekend_drawdown(), 4)})

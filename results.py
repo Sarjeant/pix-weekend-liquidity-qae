@@ -18,4 +18,6 @@ RESULTS = [
 {"kind": "depth", "m": 6, "shots": 2000, "ones": 1232, "counts": {"0": 768, "1": 1232}, "theory": 0.60146, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:56"},
 {"kind": "depth", "m": 8, "shots": 2000, "ones": 1427, "counts": {"0": 573, "1": 1427}, "theory": 0.720974, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:58"},
 {"kind": "depth", "m": 23, "shots": 2000, "ones": 1635, "counts": {"0": 365, "1": 1635}, "theory": 0.826372, "backend": "ionq_forte_ent_sim", "time": "2026-10-10 08:48"},
+{"kind": "depth", "m": 0, "shots": 200, "ones": 15, "counts": {"0": 185, "1": 15}, "theory": 0.093023, "backend": "ionq_forte_ent_hw", "job_id": "01a1266b-f352-7959-8964-9bf7526c3972", "time": "2026-10-10 11:37"},
+{"kind": "depth", "m": 8, "shots": 200, "ones": 147, "counts": {"0": 53, "1": 147}, "theory": 0.720974, "backend": "ionq_forte_ent_hw", "job_id": "01a1267c-b64c-78ff-bdd8-40eee937f744", "time": "2026-10-10 11:53"},
 ]
