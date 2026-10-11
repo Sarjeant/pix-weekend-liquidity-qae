@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pix Weekend Liquidity</title>
+<meta name="description" content="Quantum amplitude estimation of how often a weekend drains more than a buffer of Pix participants' Friday-prefunded liquidity, using Central Bank of Brazil data.">
+<script>
+  // ===== Edit these two links (leave "" to hide a button) =====
+  const VIDEO_URL  = "";   // e.g. "https://youtu.be/xxxxxxxx"
+  const QOLLAB_URL = "";   // your Qollab project page
+  const GITHUB_URL = "https://github.com/Sarjeant/pix-weekend-liquidity-qae";
+</script>
+<style>
+:root{
+  --bg:#fcfcfb; --card:#ffffff; --ink:#0b0b0b; --ink2:#52514e; --line:#e4e3df;
+  --blue:#2a78d6; --orange:#eb6834; --aqua:#1baf7a; --sea:#0e7c86; --sand:#f6efe2;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1416; --card:#172024; --ink:#f2f1ee; --ink2:#a9b0b2; --line:#2a3539;
+    --blue:#5a9be6; --orange:#f08155; --aqua:#3cc995; --sea:#3fb6c0; --sand:#1d2a2c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1416; --card:#172024; --ink:#f2f1ee; --ink2:#a9b0b2; --line:#2a3539;
+  --blue:#5a9be6; --orange:#f08155; --aqua:#3cc995; --sea:#3fb6c0; --sand:#1d2a2c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px 48px}
+header{background:linear-gradient(120deg,#0e7c86 0%,#2a78d6 55%,#1baf7a 100%);color:#fff;padding:36px 0 30px;margin-bottom:28px}
+header h1{margin:0 0 6px;font-size:clamp(1.5rem,4vw,2.3rem);line-height:1.2;letter-spacing:-.01em}
+header p{margin:0;max-width:760px;opacity:.95}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.links a{color:#fff;text-decoration:none;border:1.5px solid rgba(255,255,255,.75);border-radius:999px;padding:6px 14px;font-weight:600;font-size:.92rem}
+.links a:hover{background:rgba(255,255,255,.15)}
+h2{font-size:1.25rem;margin:36px 0 12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi b{display:block;font-size:1.8rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--ink2);font-size:.88rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.slider-row{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px}
+.slider-row label{font-weight:600}
+input[type=range]{flex:1;min-width:200px;accent-color:var(--orange)}
+.big{font-size:2.4rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.muted{color:var(--ink2);font-size:.92rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+svg{width:100%;height:auto;display:block}
+svg text{fill:var(--ink2);font-size:11px;font-family:inherit}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.charts{grid-template-columns:1fr}}
+figure{margin:0;background:#fcfcfb;border:1px solid var(--line);border-radius:12px;padding:8px}
+figure img{width:100%;height:auto;display:block}
+figcaption{color:#52514e;font-size:.85rem;padding:6px 4px 2px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--ink2);font-weight:600}
+.note{background:var(--sand);border-radius:12px;padding:14px 16px;font-size:.93rem}
+footer{color:var(--ink2);font-size:.88rem;margin-top:36px;border-top:1px solid var(--line);padding-top:14px}
+a{color:var(--blue)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--ink2);margin-top:6px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap" style="padding-bottom:0">
+    <h1>How often does a weekend drain Brazil's Pix liquidity?</h1>
+    <p>Quantum amplitude estimation of the chance that a weekend consumes more than 10% of the liquidity Pix participants prefund on Friday, from Central Bank of Brazil data, run on the IonQ Forte Enterprise 1 noise model and on IonQ hardware.</p>
+    <div class="links" id="links"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="kpis">
+  <div class="kpi"><b>9.3%</b><span>of 86 weekends drained more than 10% (8 weekends)</span></div>
+  <div class="kpi"><b style="color:var(--blue)">4.9×</b><span>smaller error than Monte Carlo at equal model calls, IonQ noise model</span></div>
+  <div class="kpi"><b>99.75%</b><span>signal kept per Grover step on the IonQ noise model</span></div>
+  <div class="kpi"><b>0.155°</b><span>rotation error per step at which the advantage disappears (measured: 0.00° ± 0.04°)</span></div>
+  <div class="kpi"><b style="color:var(--aqua)">73.5%</b><span>IonQ hardware, 8 Grover steps (ideal theory 72.1%)</span></div>
+</div>
+
+<h2>Try a different buffer</h2>
+<div class="panel">
+  <div class="slider-row">
+    <label for="buf">Buffer: <span id="bufv">10.0%</span> of Friday's balance</label>
+    <input id="buf" type="range" min="5" max="15" step="0.5" value="10">
+  </div>
+  <div class="slider-row" style="margin-top:14px">
+    <div><div class="big" id="pv">9.3%</div><div class="muted">chance a weekend drains more than the buffer</div></div>
+    <div class="muted" id="pdetail" style="max-width:520px"></div>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="muted"><b>Every weekend since January 2025</b> (drawdown = 1 − Monday / Friday balance)</div>
+      <svg id="tl" viewBox="0 0 480 230" role="img" aria-label="Weekend drawdowns over time"></svg>
+      <div class="legend"><span><i class="sw" style="background:var(--blue)"></i>within buffer</span><span><i class="sw" style="background:var(--orange)"></i>breach</span></div>
+    </div>
+    <div>
+      <div class="muted"><b>What the quantum circuit would see</b> (ideal theory, P(flag = 1) after m Grover steps)</div>
+      <svg id="amp" viewBox="0 0 480 230" role="img" aria-label="Ideal amplification curve"></svg>
+      <div class="legend"><span><i class="sw" style="background:var(--sea)"></i>sin²((2m + 1)θ), sin²θ = breach probability</span></div>
+    </div>
+  </div>
+  <p class="muted" style="margin:12px 0 0">The slider recomputes from the 86 real weekends in your browser. The quantum and hardware results on this page are for the 10% buffer; other buffers would need new runs.</p>
+</div>
+
+<h2>Results</h2>
+<div class="panel" style="overflow-x:auto">
+<table>
+  <thead><tr><th>Run</th><th>Estimate</th><th>Error vs Monte Carlo, equal model calls</th></tr></thead>
+  <tbody>
+    <tr><td>Ideal simulator</td><td>0.0965</td><td>2.2× smaller</td></tr>
+    <tr><td>Repeated runs, stated noise (5 seeded runs)</td><td>bias +0.00026</td><td>3.7× smaller (measured spread 0.00062)</td></tr>
+    <tr><td>IonQ Forte Enterprise 1 noise model</td><td>0.0930</td><td>4.9× smaller</td></tr>
+    <tr><td>IonQ Forte Enterprise 1 hardware, m = 0 and m = 8</td><td>7.5% and 73.5% flag rate</td><td>200 shots each; signal kept per step at least 96.7%</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Charts</h2>
+<div class="charts">
+  <figure><img src="chart1_balances.png" alt="Friday and Monday Conta PI balances" loading="lazy"><figcaption>Participants prefund on Friday; the weekend draws it down.</figcaption></figure>
+  <figure><img src="chart2_drawdowns.png" alt="Histogram of weekend drawdowns" loading="lazy"><figcaption>86 weekends, with the 10% buffer and the record holiday weekend.</figcaption></figure>
+  <figure><img src="chart3_amplification.png" alt="Amplification on IonQ noise model and hardware" loading="lazy"><figcaption>Amplification follows theory on the noise model and on hardware.</figcaption></figure>
+  <figure><img src="chart4_precision.png" alt="Standard error against model calls" loading="lazy"><figcaption>Same model calls, 2 to 5 times smaller error than Monte Carlo.</figcaption></figure>
+</div>
+
+<h2>What this does and doesn't show</h2>
+<div class="note">
+  With only 86 weekends, the data itself is uncertain by about ±0.032. The quantum advantage shown here is in computing a model's tail probability with fewer calls, not in removing that data uncertainty. The circuit uses 2 qubits and 3 two-qubit gates per Grover step; hardware results are two 200-shot runs.
+</div>
+
+<footer>
+  Data: Banco Central do Brasil, Conta PI balances. Code: MIT licence. This effort is supported by Qollab &amp; IonQ.
+</footer>
+</div>
+
+<script>
+const W = [{"f":"2025-01-03","d":0.02438,"fb":46.23,"mb":45.11},{"f":"2025-01-10","d":0.14208,"fb":46.65,"mb":40.02},{"f":"2025-01-17","d":0.03374,"fb":43.29,"mb":41.83},{"f":"2025-01-24","d":-0.02341,"fb":40.75,"mb":41.7},{"f":"2025-01-31","d":-0.07839,"fb":44.78,"mb":48.29},{"f":"2025-02-07","d":-0.02116,"fb":44.69,"mb":45.64},{"f":"2025-02-14","d":0.0034,"fb":45.12,"mb":44.97},{"f":"2025-02-21","d":-0.02847,"fb":43.3,"mb":44.54},{"f":"2025-03-07","d":0.02266,"fb":46.62,"mb":45.57},{"f":"2025-03-14","d":0.04157,"fb":45.61,"mb":43.71},{"f":"2025-03-21","d":0.05308,"fb":47.29,"mb":44.78},{"f":"2025-03-28","d":-0.06678,"fb":46.04,"mb":49.11},{"f":"2025-04-04","d":0.15805,"fb":52.24,"mb":43.98},{"f":"2025-04-11","d":0.00669,"fb":45.17,"mb":44.87},{"f":"2025-04-25","d":0.03558,"fb":45.11,"mb":43.5},{"f":"2025-05-02","d":0.02653,"fb":46.4,"mb":45.17},{"f":"2025-05-09","d":0.01323,"fb":46.11,"mb":45.5},{"f":"2025-05-16","d":-0.00372,"fb":43.97,"mb":44.13},{"f":"2025-05-23","d":0.05602,"fb":46.29,"mb":43.7},{"f":"2025-05-30","d":0.05542,"fb":50.89,"mb":48.07},{"f":"2025-06-06","d":0.08131,"fb":47.52,"mb":43.66},{"f":"2025-06-13","d":-0.0138,"fb":42.84,"mb":43.43},{"f":"2025-06-20","d":-0.0066,"fb":43.31,"mb":43.6},{"f":"2025-06-27","d":0.0008,"fb":43.37,"mb":43.34},{"f":"2025-07-04","d":-0.02353,"fb":37.16,"mb":38.03},{"f":"2025-07-11","d":0.05472,"fb":38.94,"mb":36.81},{"f":"2025-07-18","d":0.04345,"fb":38.02,"mb":36.36},{"f":"2025-07-25","d":0.02508,"fb":38.24,"mb":37.28},{"f":"2025-08-01","d":0.01714,"fb":38.47,"mb":37.81},{"f":"2025-08-08","d":0.01502,"fb":37.39,"mb":36.82},{"f":"2025-08-15","d":-0.03126,"fb":35.84,"mb":36.96},{"f":"2025-08-22","d":-0.03144,"fb":36.69,"mb":37.85},{"f":"2025-08-29","d":0.0184,"fb":36.42,"mb":35.75},{"f":"2025-09-05","d":0.11631,"fb":31.53,"mb":27.87},{"f":"2025-09-12","d":0.1252,"fb":30.68,"mb":26.84},{"f":"2025-09-19","d":0.06117,"fb":29.63,"mb":27.82},{"f":"2025-09-26","d":0.09279,"fb":30.15,"mb":27.35},{"f":"2025-10-03","d":0.02934,"fb":31.62,"mb":30.69},{"f":"2025-10-10","d":0.00352,"fb":29.85,"mb":29.74},{"f":"2025-10-17","d":0.05696,"fb":31.95,"mb":30.13},{"f":"2025-10-24","d":0.0524,"fb":31.32,"mb":29.68},{"f":"2025-10-31","d":-0.00446,"fb":33.85,"mb":34.0},{"f":"2025-11-07","d":0.06924,"fb":32.08,"mb":29.86},{"f":"2025-11-14","d":-0.00306,"fb":30.97,"mb":31.06},{"f":"2025-11-21","d":0.03056,"fb":31.91,"mb":30.93},{"f":"2025-11-28","d":0.10195,"fb":35.71,"mb":32.07},{"f":"2025-12-05","d":0.11258,"fb":33.68,"mb":29.89},{"f":"2025-12-12","d":0.10993,"fb":38.45,"mb":34.23},{"f":"2025-12-19","d":0.07358,"fb":34.52,"mb":31.98},{"f":"2025-12-26","d":0.04426,"fb":36.04,"mb":34.44},{"f":"2026-01-02","d":0.03444,"fb":32.95,"mb":31.81},{"f":"2026-01-09","d":0.04681,"fb":33.78,"mb":32.2},{"f":"2026-01-16","d":0.02726,"fb":31.96,"mb":31.09},{"f":"2026-01-23","d":0.01481,"fb":32.54,"mb":32.06},{"f":"2026-01-30","d":0.04477,"fb":32.45,"mb":31.0},{"f":"2026-02-06","d":0.0032,"fb":32.1,"mb":32.0},{"f":"2026-02-20","d":-0.02446,"fb":32.32,"mb":33.11},{"f":"2026-02-27","d":0.02094,"fb":32.45,"mb":31.77},{"f":"2026-03-06","d":-0.054,"fb":31.33,"mb":33.02},{"f":"2026-03-13","d":0.01062,"fb":32.99,"mb":32.64},{"f":"2026-03-20","d":0.1118,"fb":33.57,"mb":29.82},{"f":"2026-03-27","d":0.0413,"fb":31.06,"mb":29.77},{"f":"2026-04-10","d":0.00246,"fb":31.68,"mb":31.6},{"f":"2026-04-17","d":0.03083,"fb":32.88,"mb":31.86},{"f":"2026-04-24","d":0.05194,"fb":33.07,"mb":31.36},{"f":"2026-05-08","d":0.08353,"fb":33.32,"mb":30.54},{"f":"2026-05-15","d":0.04688,"fb":33.11,"mb":31.56},{"f":"2026-05-22","d":-0.00082,"fb":32.11,"mb":32.13},{"f":"2026-05-29","d":0.08996,"fb":32.94,"mb":29.98},{"f":"2026-06-05","d":0.02483,"fb":32.4,"mb":31.6},{"f":"2026-06-12","d":0.04723,"fb":33.0,"mb":31.44},{"f":"2026-06-19","d":0.00984,"fb":31.21,"mb":30.9},{"f":"2026-06-26","d":0.05252,"fb":30.88,"mb":29.26},{"f":"2026-07-03","d":0.00882,"fb":31.61,"mb":31.33},{"f":"2026-07-10","d":0.02639,"fb":32.93,"mb":32.07},{"f":"2026-07-17","d":0.04907,"fb":31.99,"mb":30.42},{"f":"2026-07-24","d":0.04484,"fb":31.31,"mb":29.91},{"f":"2026-07-31","d":0.03644,"fb":30.65,"mb":29.54},{"f":"2026-08-07","d":0.03443,"fb":30.41,"mb":29.36},{"f":"2026-08-14","d":-0.00318,"fb":32.17,"mb":32.28},{"f":"2026-08-21","d":0.07019,"fb":30.36,"mb":28.23},{"f":"2026-08-28","d":0.05445,"fb":31.33,"mb":29.62},{"f":"2026-09-11","d":0.0946,"fb":31.76,"mb":28.76},{"f":"2026-09-18","d":0.07857,"fb":31.84,"mb":29.34},{"f":"2026-09-25","d":0.02422,"fb":31.04,"mb":30.29},{"f":"2026-10-02","d":0.07892,"fb":32.04,"mb":29.51}];
+(function links(){
+  const box = document.getElementById("links");
+  [["Watch the demo video", VIDEO_URL], ["Run it live on Qollab", QOLLAB_URL], ["Code on GitHub", GITHUB_URL]]
+    .forEach(([t,u]) => { if(u){ const a=document.createElement("a"); a.href=u; a.textContent=t; a.target="_blank"; a.rel="noopener"; box.appendChild(a);} });
+})();
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const NS = "http://www.w3.org/2000/svg";
+function el(svg, tag, attrs, text){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; svg.appendChild(e); return e; }
+const fmtPct = x => (x*100).toFixed(1) + "%";
+
+function drawTimeline(buf){
+  const s=document.getElementById("tl"); s.innerHTML="";
+  const L=40,R=470,T=12,B=200, lo=-0.10, hi=0.18;
+  const y=v=>B-(v-lo)/(hi-lo)*(B-T), bw=(R-L)/W.length;
+  for(let g=-0.10; g<=0.181; g+=0.05){ const gy=y(g); el(s,"line",{x1:L,x2:R,y1:gy,y2:gy,stroke:css("--line")}); el(s,"text",{x:L-6,y:gy+4,"text-anchor":"end"},Math.round(g*100)+"%"); }
+  el(s,"line",{x1:L,x2:R,y1:y(0),y2:y(0),stroke:css("--ink2"),"stroke-width":0.8});
+  W.forEach((w,i)=>{
+    const top=Math.min(y(w.d),y(0)), h=Math.abs(y(w.d)-y(0));
+    const r=el(s,"rect",{x:L+i*bw+0.6,y:top,width:Math.max(bw-1.2,1),height:Math.max(h,0.5),fill:w.d>buf?css("--orange"):css("--blue"),rx:1});
+    el(r,"title",{},`Weekend of ${w.f}: ${(w.d*100).toFixed(1)}% drawn down (R$ ${w.fb}bn → ${w.mb}bn)`);
+  });
+  el(s,"line",{x1:L,x2:R,y1:y(buf),y2:y(buf),stroke:css("--ink"),"stroke-width":1.6,"stroke-dasharray":"5 4"});
+  el(s,"text",{x:R,y:y(buf)-5,"text-anchor":"end",style:"fill:"+css("--ink")+";font-weight:600"},"buffer "+fmtPct(buf));
+  el(s,"text",{x:L,y:222},W[0].f.slice(0,7)); el(s,"text",{x:R,y:222,"text-anchor":"end"},W[W.length-1].f.slice(0,7));
+}
+
+function drawAmp(p){
+  const s=document.getElementById("amp"); s.innerHTML="";
+  const L=40,R=470,T=12,B=200, M=12, th=Math.asin(Math.sqrt(p));
+  const x=m=>L+m/M*(R-L), y=v=>B-v*(B-T);
+  for(let g=0; g<=1.001; g+=0.25){ el(s,"line",{x1:L,x2:R,y1:y(g),y2:y(g),stroke:css("--line")}); el(s,"text",{x:L-6,y:y(g)+4,"text-anchor":"end"},g.toFixed(2)); }
+  let d=""; for(let k=0;k<=240;k++){ const m=k/240*M; d+=(k?"L":"M")+x(m).toFixed(1)+","+y(Math.sin((2*m+1)*th)**2).toFixed(1); }
+  el(s,"path",{d,fill:"none",stroke:css("--sea"),"stroke-width":1.2,opacity:0.45});
+  for(let m=0;m<=M;m++){ const v=Math.sin((2*m+1)*th)**2; const c=el(s,"circle",{cx:x(m),cy:y(v),r:4.5,fill:css("--sea"),stroke:css("--card"),"stroke-width":1.5}); el(c,"title",{},`m = ${m}: ${(v*100).toFixed(1)}%`); el(s,"text",{x:x(m),y:216,"text-anchor":"middle"},m); }
+  el(s,"text",{x:(L+R)/2,y:229,"text-anchor":"middle"},"Grover steps m");
+}
+
+function update(){
+  const buf=document.getElementById("buf").value/100;
+  document.getElementById("bufv").textContent=fmtPct(buf);
+  const n=W.filter(w=>w.d>buf).length, p=n/W.length, se=Math.sqrt(p*(1-p)/W.length);
+  document.getElementById("pv").textContent=fmtPct(p);
+  const worst=W.filter(w=>w.d>buf).map(w=>w.f).slice(-3).join(", ");
+  document.getElementById("pdetail").innerHTML=`${n} of ${W.length} weekends breached; data uncertainty about ±${(se*100).toFixed(1)} points.` + (n?` Most recent: ${worst}.`:"");
+  drawTimeline(buf); drawAmp(Math.max(p,1e-6));
+}
+document.getElementById("buf").addEventListener("input",update);
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",update);
+update();
+</script>
+</body>
+</html>
